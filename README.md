@@ -8,7 +8,6 @@ Author: Reid Haegele
 #### Prerequisites:
 - [Install NodeJS](https://nodejs.org/en/download)
 - [Install vscode](https://code.visualstudio.com/download)
-- [Install Git](https://git-scm.com/downloads)
 
 #### Create new project
 First, open vscode. Then, open the terminal in vscode by doing terminal->new terminal or with keyboard shortcut: 
@@ -39,6 +38,7 @@ Let's check out the app by running the local development server. Open the vscode
 > ng serve
 
 Open the [localhost link](http://localhost:4200/)
+
 Not too shabby for a Hello World!
 
 #### Fetch from an API
@@ -85,6 +85,8 @@ Then modify the providers list to include HttpClientModule:
 providers: [provideRouter(routes), importProvidersFrom(HttpClientModule)]
 ```
 
+app.component.ts
+------
 Inside of the `app.component.ts` file:
 Add the following import (The pokémon API service you just created):
 ```ts
@@ -145,24 +147,24 @@ Check out the app with `ng serve`!
 It should now be able to fetch a random Pokémon from the PokéAPI and display its sprite image. Be sure to hit the "new" button a few times to try it out. Next, we will add the guessing and checking functionality.
 
 #### Guess and Check Functionality
-Back in the `app.component.ts` file, initialize three new variables:
+Back in the `app.component.ts` file, initialize three new variables in `export class AppComponent`:
 ```ts
   guessed = false;
   correct = false;
   guess = "";
 ```
-Add a guess function:
+Add a guess function under your variables in `export class AppComponent`:
 ```ts
   guessPoke(poke: string) {
     this.guessed = true
     this.correct = this.guess.toLowerCase() === poke
   }
 ```
-And add an onKey function:
+And add an onKey function in `export class AppComponent`:
 ```ts
 onKey(event: any) {this.guess = event.target.value;}
 ```
-Finally, modify the existing fetchPoke function to reset those variables each time a new Pokémon is fetched:
+Finally, modify the existing fetchPoke function in `export class AppComponent` to reset those variables each time a new Pokémon is fetched:
 ```ts
 fetchPoke(): void {
     this.guess = ""
