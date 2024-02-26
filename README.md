@@ -1,5 +1,5 @@
 # Pokéguesser
-![image](https://github.com/reidhaegele/pokeguesser/assets/37484165/0be6c3b3-5f2f-445f-96e7-63944d16117b)
+![image](https://github.com/reidhaegele/pokeguesser/assets/37484165/fbecd085-1cd9-4c30-8559-79addb2ba9bf)
 
 Pokémon guessing game!
 
