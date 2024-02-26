@@ -1,5 +1,8 @@
 # Pokéguesser
+![image](https://github.com/reidhaegele/pokeguesser/assets/37484165/0be6c3b3-5f2f-445f-96e7-63944d16117b)
+
 Pokémon guessing game!
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.2.1.
 Credit to [Chris Achinga](https://dev.to/chrisachinga/how-to-fetch-data-from-an-api-in-angular-4p37) for API tutorial example
 
@@ -8,6 +11,7 @@ Author: Reid Haegele
 #### Prerequisites:
 - [Install NodeJS](https://nodejs.org/en/download)
 - [Install vscode](https://code.visualstudio.com/download)
+- [Install Git](https://git-scm.com/downloads)
 
 #### Create new project
 First, open vscode. Then, open the terminal in vscode by doing terminal->new terminal or with keyboard shortcut: 
@@ -50,6 +54,7 @@ In the src/app/ directory, create a new file called `poke.service.ts`:
 
 ![image](https://github.com/reidhaegele/pokeguesser/assets/37484165/5e7b696f-56e3-48b9-a6f9-2dfc111fde47)
 
+We will be limiting the api to the original 151 gen1 Pokémon by randomly generating a number between 1 and 151. You can expand this up to 1025 Pokémon just by changing 151 in `Math.floor(Math.random() * 151)` below.
 Inside of `poke.service.ts`, paste in the following code:
 ```ts
 import { Injectable } from '@angular/core';
@@ -188,7 +193,7 @@ Modify the check button to include a function call:
   {{ guessed ? "Checked" : "Check" }}
 </button>
 ```
-Add an indicator for correct or incorrect:
+Add an indicator for correct or incorrect at the end of the last div. Refer to the full html below:
 ```html
 <p>{{ guessed ? (correct ? ("Correct - " + poke) : ("Incorrect - " + poke)) : "" }}</p>
 ```
@@ -227,6 +232,8 @@ The full app.component.html should now look like this:
 ```
 
 #### Tidying Up - Back End
+app.component.ts
+------
 Modify the existing import from @angular/core to include three more imports:
 ```ts
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
@@ -235,13 +242,13 @@ Modify the `export class AppComponent` to implement `OnInit`:
 ```ts
 export class AppComponent implements OnInit {
 ```
-Add the `ngOnInit` function inside of the `export class AppComponent` to ensure a Pokémon is fetched the first time the page is loaded:
+Add the `ngOnInit` function inside of the `export class AppComponent` function to ensure a Pokémon is fetched the first time the page is loaded:
 ```ts
   ngOnInit(): void {
     this.fetchPoke()
   }
 ```
-Add the `ngAfterViewInit` function inside of the `export class AppComponent` to ensure the input field is automatically focused.
+Add the `ngAfterViewInit` function inside of the `export class AppComponent` function to ensure the input field is automatically focused.
 ```ts
   @ViewChild("pokeGuess") pokeGuessField!: ElementRef;
   ngAfterViewInit() {
@@ -250,9 +257,9 @@ Add the `ngAfterViewInit` function inside of the `export class AppComponent` to 
 ```
 Add the following line to the `fetchPoke` function to ensure the input field is automatically focused after hitting the _New_ button:
 ```ts
-this.myInputField.nativeElement.focus();
+this.pokeGuessField.nativeElement.focus();
 ```
-Add this function inside of the `export class AppComponent` to ensure that when the `enter` key is pressed, either the guess is checked or a new Pokémon is fetched.
+Add the following function inside of the `export class AppComponent` function to ensure that when the `enter` key is pressed, either the guess is checked or a new Pokémon is fetched.
 ```ts
   decideEnter(poke: string): void {
     if (this.guessed) {
@@ -265,8 +272,9 @@ Add this function inside of the `export class AppComponent` to ensure that when 
 ```
 
 #### Tidy Up - Front End
-In your project, create a new folder in src/assets called font. Then, download this arcade font [joystix](https://www.dafont.com/joystix.font). Open the downloads folder in file explorer and find `joystix.zip`. Right click it and choose extract here. Open the newly created joystix folder. Rename `joystix monospace.otf` to `joystix.otf` Drag `joystix.otf` file into src/assets/font/.
-In the global css file `src/app/styles.css`, add the following:
+In your project, create a new **folder** in src/assets called font. Then, download this arcade font [joystix](https://www.dafont.com/joystix.font). Open the downloads folder in file explorer and find `joystix.zip`. Extract the files from the zip. Open the newly created joystix folder. Rename `joystix monospace.otf` to `joystix.otf` Drag the `joystix.otf` file into the src/assets/font/ folder.
+
+In the global css file `src/styles.css`, add the following:
 ```css
 html {
     background-color: #e3e3e3;
@@ -277,11 +285,15 @@ html {
 }
 ```
 
+app.component.html
+------
 In src/app/app.component.html, once again modify the input line to add a few more attributes:
 ```html
 <input [value]="guess" #pokeGuess pokeGuessField type="text" class="guess-input" (keyup.enter)="decideEnter(poke)" (keyup)="onKey($event)" placeholder="pikachu" autofocus cdkTrapFocus>
 ```
 
+app.component.css
+------
 In src/app/app.component.css, add the following css classes:
 ```css
 .container {
@@ -323,7 +335,10 @@ input[type="text"]
     font-size: 1.5rem;
 }
 ```
-In src/app/app.component.css, add the following css class selectors to the divs:
+
+app.component.html
+------
+In src/app/app.component.html, replace the existing code with the following in order to add the css class selectors:
 ```html
 <div class="container">
   <!-- Navbar -->
