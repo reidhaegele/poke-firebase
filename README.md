@@ -324,7 +324,8 @@ button {
     border-radius: 5px;
     cursor: pointer;
     font-size: 2.2rem;
-	margin: 1rem;
+	  margin: 1rem;
+    font-family: 'joystix';
 }
 button:hover {
     opacity: 90%;
