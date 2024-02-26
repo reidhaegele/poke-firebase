@@ -10,20 +10,19 @@ import { PokeService } from './poke.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
-  title = 'PokeGuesser';
+  title = 'pokeguesserTUT';
   poke = "";
   sprite = null;
-  guess = "";
   guessed = false;
   correct = false;
+  guess = "";
 
-  @ViewChild("myinput") myInputField!: ElementRef;
+  @ViewChild("pokeGuess") pokeGuessField!: ElementRef;
   ngAfterViewInit() {
-    this.myInputField.nativeElement.focus();
+    this.pokeGuessField.nativeElement.focus();
   }
 
   constructor(private pokeService: PokeService) {}
-
   fetchPoke(): void {
     this.guess = ""
     this.guessed = false
@@ -32,22 +31,22 @@ export class AppComponent implements OnInit {
       this.poke = data.name;
       this.sprite = data.sprites.front_default
     });
-    this.myInputField.nativeElement.focus();
+    this.pokeGuessField.nativeElement.focus();
   }
 
   onKey(event: any) {this.guess = event.target.value;}
 
-  async guessPoke(poke: string) {
-    try {
-      this.guessed = true
-      if (this.guess.toLowerCase() === poke) {
-        this.correct = true
-      }
-      else {
-        this.correct = false
-      }
-    } catch (error) {
-      console.log(error);
+  guessPoke(poke: string) {
+    this.guessed = true
+    this.correct = this.guess.toLowerCase() === poke
+  }
+
+  decideEnter(poke: string): void {
+    if (this.guessed) {
+      this.fetchPoke()
+    }
+    else {
+      this.guessPoke(poke)
     }
   }
 

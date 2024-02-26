@@ -1,8 +1,7 @@
-/* You can add global styles to this file, and also import other style files */
 html {
     background-color: #e3e3e3;
 }
 @font-face {
-    font-family: 'Pokemon_Hollow';
+    font-family: 'joystix';
     src: url(assets/font/joystix.otf) format("opentype");
-  }
+}

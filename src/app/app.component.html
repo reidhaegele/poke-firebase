@@ -1,9 +1,9 @@
 <div class="container">
-  <div class="navbar">
-    <!-- Navbar -->
+  <!-- Navbar -->
+  <div>
     <nav>
-      <div class="navbar-item">
-        <a class="navbar-brand">PokeGuesser</a>
+      <div>
+        <a>PokeGuesser</a>
       </div>
     </nav>
   </div>
@@ -11,16 +11,20 @@
   <!-- content -->
   <div class="content">
     <h4>Guess that Pokemon!</h4>
-    <img class="pokemon-img" [src]="sprite">
-    <input [value]="guess" #myinput myInputField type="text" class="guess-input" (keyup.enter)="guessPoke(poke)" (keyup)="onKey($event)" placeholder="pikachu" autofocus cdkTrapFocus>
-    <div class="button-group">
-      <div class="play-again-button">
-        <button class="btn tertiary" id="playAgainBtn" (click)="fetchPoke()">New</button>
-      </div>
-      <div class="check-answer-button">
-        <button class="btn" id="checkAnswerBtn" (click)="guessPoke(poke)">
-          {{ guessed ? "Checked" : "Check" }}
-        </button>
+    <div>
+      <img width="300px" [src]="sprite">
+    </div>
+    <div>
+      <input [value]="guess" #pokeGuess pokeGuessField type="text" class="guess-input" (keyup.enter)="decideEnter(poke)" (keyup)="onKey($event)" placeholder="pikachu" autofocus cdkTrapFocus>
+      <div class="button-group">
+        <div>
+          <button (click)="fetchPoke()">New</button>
+        </div>
+        <div>
+          <button (click)="guessPoke(poke)">
+            {{ guessed ? "Checked" : "Check" }}
+          </button>
+        </div>
       </div>
     </div>
     <p>{{ guessed ? (correct ? ("Correct - " + poke) : ("Incorrect - " + poke)) : "" }}</p>
