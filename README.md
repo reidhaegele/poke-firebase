@@ -375,4 +375,21 @@ In src/app/app.component.html, replace the existing code with the following in o
 </div>
 ```
 
+Push to Github!
+------
+In the vscode terminal, type:
+> git status
+
+Verify your changes are present in the status report. Then, stage your changes:
+> git add .
+
+Commit your staged changes:
+> git commit -m "completed pokemon guessing game"
+
+Add the remote repo:
+> git remote add origin [REPLACE WITH REPO URL]
+
+Then, push to the remote repo:
+> git push --set-upstream origin master
+
 That is it! Congratulations on your new Pokémon Guessing Game!
