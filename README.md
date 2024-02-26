@@ -1,5 +1,5 @@
-# Pokeguesser
-Pokemon guessing game!
+# Pokéguesser
+Pokémon guessing game!
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.2.1.
 Credit to [Chris Achinga](https://dev.to/chrisachinga/how-to-fetch-data-from-an-api-in-angular-4p37) for API tutorial example
 
@@ -36,7 +36,7 @@ Let's check out the app by running the local development server. Open the vscode
 Not too shabby for a Hello World!
 
 #### Fetch from an API
-We are creating a Pokemon guessing game. Since there are hundreds of Pokemon, we are going to use [PokeAPI](https://pokeapi.co/) to fetch the name and sprite image of our Pokemon. To start, we will create a service to handle our interaction with the API.
+We are creating a Pokémon guessing game. Since there are hundreds of Pokémon, we are going to use [PokéAPI](https://pokeapi.co/) to fetch the name and sprite image of our Pokémon. To start, we will create a service to handle our interaction with the API.
 
 Stop the server if running with `ctrl + c` in the terminal.
 
@@ -74,7 +74,7 @@ providers: [provideRouter(routes), importProvidersFrom(HttpClientModule)]
 ```
 
 Inside of the `app.component.ts` file:
-Add the following import (The pokemon API service you just created):
+Add the following import (The pokémon API service you just created):
 ```ts
 import { PokeService } from './poke.service';
 ```
@@ -88,11 +88,11 @@ variables poke and sprite:
 poke = "";
 sprite = null;
 ```
-and a constructor for the pokemon API service:
+and a constructor for the pokémon API service:
 ```ts
 constructor(private pokeService: PokeService) {}
 ```
-and finally a `fetchPoke` function to grab a Pokemon from the API:
+and finally a `fetchPoke` function to grab a Pokémon from the API:
 ```ts
 fetchPoke(): void {
     this.pokeService.getPoke().subscribe((data: any) => {
@@ -134,7 +134,7 @@ Now, edit `app.component.html` by deleting everything currently in the file. Rep
 ```
 
 Check out the app with `ng serve`!
-It should now be able to fetch a random Pokemon from the PokeAPI and display its sprite image. Be sure to hit the "new" button a few times to try it out. Next, we will add the guessing and checking functionality.
+It should now be able to fetch a random Pokémon from the PokéAPI and display its sprite image. Be sure to hit the "new" button a few times to try it out. Next, we will add the guessing and checking functionality.
 
 #### Guess and Check Functionality
 Back in the `app.component.ts` file, initialize three new variables:
@@ -154,7 +154,7 @@ And add an onKey function:
 ```ts
 onKey(event: any) {this.guess = event.target.value;}
 ```
-Finally, modify the existing fetchPoke function to reset those variables each time a new Pokemon is fetched:
+Finally, modify the existing fetchPoke function to reset those variables each time a new Pokémon is fetched:
 ```ts
 fetchPoke(): void {
     this.guess = ""
@@ -225,7 +225,7 @@ Modify the `export class AppComponent` to implement `OnInit`:
 ```ts
 export class AppComponent implements OnInit {
 ```
-Add the `ngOnInit` function inside of the `export class AppComponent` to ensure a Pokemon is fetched the first time the page is loaded:
+Add the `ngOnInit` function inside of the `export class AppComponent` to ensure a Pokémon is fetched the first time the page is loaded:
 ```ts
   ngOnInit(): void {
     this.fetchPoke()
@@ -242,7 +242,7 @@ Add the following line to the `fetchPoke` function to ensure the input field is 
 ```ts
 this.myInputField.nativeElement.focus();
 ```
-Add this function inside of the `export class AppComponent` to ensure that when the `enter` key is pressed, either the guess is checked or a new Pokemon is fetched.
+Add this function inside of the `export class AppComponent` to ensure that when the `enter` key is pressed, either the guess is checked or a new Pokémon is fetched.
 ```ts
   decideEnter(poke: string): void {
     if (this.guessed) {
@@ -349,4 +349,4 @@ In src/app/app.component.css, add the following css class selectors to the divs:
 </div>
 ```
 
-That is it! Congratulations on your new Pokemon Guessing Game!
+That is it! Congratulations on your new Pokémon Guessing Game!
