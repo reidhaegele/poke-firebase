@@ -18,27 +18,33 @@ Once in the terminal, install the Angular command line utility:
 > npm install -g @angular/cli
 
 Use the Angular CLI to generate a new Angular project. First, open vscode.
-`ng new pokeguesser`
+> ng new pokeguesser
+
+- If an error occurs stating "cannot be loaded because running scripts is disabled on this system", then open Powershell and run the following command: `Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser`. Make sure to say Yes to All.
+- If asked about sending usage data to the Angular team, do either yes or no (your preference)
 - If asked `Which stylesheet format would you like to use?` use css.
 - If asked `Do you want to enable Server-Side Rendering (SSR) and Static Site Generation (SSG/Prerendering)?` say no (n).
 
 Navigate into the newly created project directory:
 > cd pokeguesser
 
-Open the folder in the current vscode window (-r reuses current window)
+Open the folder in the current vscode window (-r reuses current window). NOTE: Include the period in the below command
 > code -r .
+
+Go to extensions and search for Angular Language Service. Install the extension.
 
 You now are looking at a freshly generated Angular project. The core of this app is the src/app/ directory. Let's quickly brief some core Angular concepts by watching [this video](https://youtu.be/Ata9cSC2WpM?si=A-OpyxyiajeymxQc) from Fireship.
 
 Let's check out the app by running the local development server. Open the vscode terminal back up and run:
 > ng serve
 
+Open the [localhost link](http://localhost:4200/)
 Not too shabby for a Hello World!
 
 #### Fetch from an API
 We are creating a Pokémon guessing game. Since there are hundreds of Pokémon, we are going to use [PokéAPI](https://pokeapi.co/) to fetch the name and sprite image of our Pokémon. To start, we will create a service to handle our interaction with the API.
 
-Stop the server if running with `ctrl + c` in the terminal.
+Stop the server, if running, with `ctrl + c` in the terminal.
 
 In the src/app/ directory, create a new file called `poke.service.ts`:
 
@@ -62,11 +68,17 @@ export class PokeService {
 }
 ```
 
-This PokeService is a service that we can inject into other components. By specifying `@Injectable({providedIn: 'root'})`, we are stating that a Singleton of PokeService is created and accessible by the entire application. This is because all injected services need a provider, so we create one instance and provide it to the whole application. This leads us to our next issue, the HttpClient. 
+This PokeService is a service that we can inject into other components. By specifying `@Injectable({providedIn: 'root'})`, we are stating that a [Singleton](https://refactoring.guru/design-patterns/singleton) of PokeService is created and accessible by the entire application. This is because all injected services need a provider, so we create one instance and provide it to the whole application. This leads us to our next issue, the HttpClient. 
 
+app.config.ts
+------
 We use an injected HttpClient service in our PokeService. However, we have not specified a Provider. If we never specify a provider, we will recieve a provider undefined error later on. Let's establish the HttpClient provider now. in `app.config.ts`, add the following import:
 ```ts
 import { HttpClientModule } from '@angular/common/http';
+```
+Change the existing @angular/core` import to include importProvidersFrom:
+```ts
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 ```
 Then modify the providers list to include HttpClientModule:
 ```ts
@@ -77,10 +89,6 @@ Inside of the `app.component.ts` file:
 Add the following import (The pokémon API service you just created):
 ```ts
 import { PokeService } from './poke.service';
-```
-Change the existing @angular/core` import to include importProvidersFrom:
-```ts
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 ```
 Inside the `export class AppComponent` curly braces add:
 variables poke and sprite:
