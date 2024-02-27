@@ -9,6 +9,6 @@ export class PokeService {
   constructor(private http: HttpClient) {}
 
   getPoke(): Observable<any> {
-    return this.http.get(this.url + Math.floor(Math.random() * 151), { headers: { Accept: 'application/json' } });
+    return this.http.get(this.url + Math.floor(Math.random() * 152), { headers: { Accept: 'application/json' } });
   }
 }

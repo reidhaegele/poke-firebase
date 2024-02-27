@@ -54,7 +54,7 @@ In the src/app/ directory, create a new file called `poke.service.ts`:
 
 ![image](https://github.com/reidhaegele/pokeguesser/assets/37484165/5e7b696f-56e3-48b9-a6f9-2dfc111fde47)
 
-We will be limiting the api to the original 151 gen1 Pokémon by randomly generating a number between 1 and 151. You can expand this up to 1025 Pokémon just by changing 151 in `Math.floor(Math.random() * 151)` below.
+We will be limiting the api to the original 151 gen1 Pokémon by randomly generating a number between 1 and 151. You can expand this up to 1025 Pokémon just by changing 152 in `Math.floor(Math.random() * 152)` below.
 Inside of `poke.service.ts`, paste in the following code:
 ```ts
 import { Injectable } from '@angular/core';
@@ -68,7 +68,7 @@ export class PokeService {
   constructor(private http: HttpClient) {}
 
   getPoke(): Observable<any> {
-    return this.http.get(this.url + Math.floor(Math.random() * 151), { headers: { Accept: 'application/json' } });
+    return this.http.get(this.url + Math.floor(Math.random() * 152), { headers: { Accept: 'application/json' } });
   }
 }
 ```
