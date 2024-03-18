@@ -14,6 +14,7 @@ Author: Reid Haegele
 Prerequisites:
 - git clone the [original repository](https://github.com/reidhaegele/pokeguesser.git)
 - Create an account on [Firebase](https://firebase.google.com/)
+
 #### Angular Fire
 In the vscode terminal, run the following:
 > ng add @angular/fire
@@ -64,7 +65,7 @@ Create a folder in the app directory called "pages". Then, run the following com
 > ng g c pages/create-account
 > ng g c pages/signin
 
-in the src/app/routes.ts file, replace everything with the following:
+in the `src/app/routes.ts` file, replace everything with the following:
 ```ts
 import { Routes } from '@angular/router';
 import { SigninComponent } from './pages/signin/signin.component';
@@ -78,7 +79,11 @@ export const routes: Routes = [
 ];
 ```
 
-In the src/app/app.component.html file, replace everything with the following:
+------
+
+We are moving the home page to a new component.
+
+In the `src/app/app.component.html` file, copy everything from `src/app/app.component.html` and paste it into `src/app/pages/home.component.html`. Put the following into `src/app/app.component.html`:
 ```html
 <div>
   <app-navbar></app-navbar>
@@ -88,7 +93,8 @@ In the src/app/app.component.html file, replace everything with the following:
 </div>
 ```
 
-In the src/app/app.component.ts file, replace everything with the following:
+Copy everything from `src/app/app.component.ts` and paste it into `src/app/pages/home.component.ts`.
+In `src/app/app.component.ts`, delete everything inside the export class AppComponent function and remove the OnInit. Remove the PokeService import. Add an import for the Navbar Component.
 ```ts
 import { Component } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
@@ -107,11 +113,11 @@ export class AppComponent {
 }
 ```
 
-Delete everything in the src/app/app.component.css file
+Delete everything in the `src/app/app.component.css` file
 
 ------
 
-Create two files, user.interface.ts and auth.service.ts.
+Create two files, `user.interface.ts` and `auth.service.ts`.
 Put the following in user.interface.ts:
 ```ts
 export interface UserInterface {
@@ -119,7 +125,7 @@ export interface UserInterface {
     username: string;
 }
 ```
-Put the following in auth.service.ts:
+Put the following in `auth.service.ts`:
 ```ts
 import { Injectable, inject, signal } from "@angular/core";
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, user } from "@angular/fire/auth";
@@ -610,4 +616,4 @@ export class HomeComponent implements OnInit {
 
 ------
 
-Move the poke.service.ts file into the pages/home directory.
+Move the `poke.service.ts` file into the pages/home directory.
