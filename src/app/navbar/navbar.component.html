@@ -1,0 +1,19 @@
+<div class="content">
+    <nav class="navbar">
+        <div class="start">
+            <a routerLink="/">PokeGuesser</a>
+        </div>
+        @if (authService.currentUserSig() == null) {
+        <div class="end">
+            <a routerLink="/register">Register</a>|
+            <a routerLink="/login">Login</a>
+        </div>
+        }
+        @else {
+        <div class="end">
+            {{authService.currentUserSig()?.username}}-
+            <a (click)="logout()">Logout</a>
+        </div>
+        }
+    </nav>
+</div>
