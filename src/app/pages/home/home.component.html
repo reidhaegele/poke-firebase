@@ -1,0 +1,23 @@
+<div class="container">
+    <!-- content -->
+    <div class="content">
+      <h4>Guess that Pokemon!</h4>
+      <div>
+        <img width="300px" [src]="sprite">
+      </div>
+      <div>
+        <input [value]="guess" #pokeGuess pokeGuessField type="text" class="guess-input" (keyup.enter)="decideEnter(poke)" (keyup)="onKey($event)" placeholder="pikachu" autofocus cdkTrapFocus>
+        <div class="button-group">
+          <div>
+            <button (click)="fetchPoke()">New</button>
+          </div>
+          <div>
+            <button (click)="guessPoke(poke)">
+              {{ guessed ? "Checked" : "Check" }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <p>{{ guessed ? (correct ? ("Correct - " + poke) : ("Incorrect - " + poke)) : "" }}</p>
+    </div>
+  </div>

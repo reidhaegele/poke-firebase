@@ -88,6 +88,23 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "version": 2
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "pokeguesser:build:production",
+              "serveTarget": "pokeguesser:serve:production"
+            },
+            "development": {
+              "buildTarget": "pokeguesser:build:development",
+              "serveTarget": "pokeguesser:serve:development"
+            }
+          },
+          "defaultConfiguration": "production"
         }
       }
     }

@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "gdsc-pokeguesser": {
+      "hosting": {
+        "pokeguesser": [
+          "gdsc-pokeguesser"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "gdsc-pokeguesser"
+  }
+}
