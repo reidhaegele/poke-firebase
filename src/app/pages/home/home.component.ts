@@ -62,7 +62,6 @@ export class HomeComponent implements OnInit {
       } else {
         this.authService.currentUserSig.set(null);
       }
-      console.log("REID: " + this.authService.currentUserSig());
     });
     this.fetchPoke();
   }
