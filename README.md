@@ -1,300 +1,457 @@
 # Pokéguesser
-![image](https://github.com/reidhaegele/pokeguesser/assets/37484165/fbecd085-1cd9-4c30-8559-79addb2ba9bf)
+![image](https://github.com/reidhaegele/poke-firebase/assets/37484165/9ef0a60f-e33c-4a70-96e7-0c5cdf85ec02)
 
 Pokémon guessing game!
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.2.1.
-Credit to [Chris Achinga](https://dev.to/chrisachinga/how-to-fetch-data-from-an-api-in-angular-4p37) for API tutorial example
+
+Credit to [Chris Achinga](https://dev.to/chrisachinga/how-to-fetch-data-from-an-api-in-angular-4p37) for API tutorial example.
+Credit to [MonsterlessonsAcademy](https://www.youtube.com/watch?v=586O934xrhQ) for Firebase Auth tutorial.
 
 ## Tutorial
 Author: Reid Haegele
-#### Prerequisites:
-- [Install NodeJS](https://nodejs.org/en/download)
-- [Install vscode](https://code.visualstudio.com/download)
-- [Install Git](https://git-scm.com/downloads)
 
-#### Create new project
-First, open vscode. Then, open the terminal in vscode by doing terminal->new terminal or with keyboard shortcut: 
-> ctrl + shift + `
+Prerequisites:
+- git clone the [original repository](https://github.com/reidhaegele/pokeguesser.git)
+- Create an account on [Firebase](https://firebase.google.com/)
+#### Angular Fire
+In the vscode terminal, run the following:
+> ng add @angular/fire
 
-Once in the terminal, install the Angular command line utility:
-> npm install -g @angular/cli
+> The package @angular/fire@17.0.1 will be installed and executed.
+Would you like to proceed?
 
-Use the Angular CLI to generate a new Angular project. First, open vscode.
-> ng new pokeguesser
+Say yes.
 
-- If an error occurs stating "cannot be loaded because running scripts is disabled on this system", then open Powershell and run the following command: `Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser`. Make sure to say Yes to All.
-- If asked about sending usage data to the Angular team, do either yes or no (your preference)
-- If asked `Which stylesheet format would you like to use?` use css.
-- If asked `Do you want to enable Server-Side Rendering (SSR) and Static Site Generation (SSG/Prerendering)?` say no (n).
+> What features would you like to setup?
 
-Navigate into the newly created project directory:
-> cd pokeguesser
+Deselect hosting. Select Authentication.
 
-Open the folder in the current vscode window (-r reuses current window). NOTE: Include the period in the below command
-> code -r .
+> Which Firebase account would you like to use?
 
-Go to extensions and search for Angular Language Service. Install the extension.
+Add your Firebase account and sign in through using the link.
 
-You now are looking at a freshly generated Angular project. The core of this app is the src/app/ directory. Let's quickly brief some core Angular concepts by watching [this video](https://youtu.be/Ata9cSC2WpM?si=A-OpyxyiajeymxQc) from Fireship.
+> Please select a project:
 
-Let's check out the app by running the local development server. Open the vscode terminal back up and run:
-> ng serve
+Select [CREATE NEW PROJECT]
 
-Open the [localhost link](http://localhost:4200/)
+> Please specify a unique project id (cannot be modified afterward) [6-30 characters]:
 
-Not too shabby for a Hello World!
+Type in "GDSC-[your name and last initial]-pokeguesser". Be sure to replace your name with your actual name and initial. This is because your project ID must be uniqe from all Firebase projects which can be challenging.
 
-#### Fetch from an API
-We are creating a Pokémon guessing game. Since there are hundreds of Pokémon, we are going to use [PokéAPI](https://pokeapi.co/) to fetch the name and sprite image of our Pokémon. To start, we will create a service to handle our interaction with the API.
+> What would you like to call your project? (gdsc-[[your name and last initial]]-pokeguesser)
 
-Stop the server, if running, with `ctrl + c` in the terminal.
+Just hit enter to keep the default name.
 
-In the src/app/ directory, create a new file called `poke.service.ts`:
+> Please select an app:
 
-![image](https://github.com/reidhaegele/pokeguesser/assets/37484165/5e7b696f-56e3-48b9-a6f9-2dfc111fde47)
+Select [CREATE NEW APP] and hit enter.
 
-We will be limiting the api to the original 151 gen1 Pokémon by randomly generating a number between 1 and 151. You can expand this up to 1025 Pokémon just by changing 152 in `Math.floor(Math.random() * 152)` below.
-Inside of `poke.service.ts`, paste in the following code:
+Now, check your configuration file src\app\app.config.ts to ensure that Angular Fire was set up correctly. It should have 
+![image](https://github.com/reidhaegele/poke-firebase/assets/37484165/e8d2aee4-5875-4426-bb66-00a69bbebb8f)
+
+I hid my information simply so that you would not attempt to copy it. However, do not worry about pushing this information to a public repository. This information is simply identifying your project and won't allow people to charge costs to your Firebase account. To ensure you are using Firebase safely, look at the [official docs](https://firebase.google.com/docs/rules).
+
+#### Paging
+To allow for account creation and signing in, we will need more pages. to begin, we will separate our application into pages and route to these pages.
+Before that, create a folder in the app directory called "components". Then, run the following commands:
+> ng g c components/login
+> ng g c components/register
+> ng g c components/navbar
+
+Create a folder in the app directory called "pages". Then, run the following commands:
+> ng g c pages/home
+> ng g c pages/create-account
+> ng g c pages/signin
+
+in the src/app/routes.ts file, replace everything with the following:
 ```ts
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Routes } from '@angular/router';
+import { SigninComponent } from './pages/signin/signin.component';
+import { CreateAccountComponent } from './pages/create-account/create-account.component';
+import { HomeComponent } from './pages/home/home.component';
 
-@Injectable({providedIn: 'root'})
-export class PokeService {
-  url = 'https://pokeapi.co/api/v2/pokemon/';
+export const routes: Routes = [
+    { path: 'register', component: CreateAccountComponent},
+    { path: 'login', component: SigninComponent },
+    { path: '', component: HomeComponent },
+];
+```
 
-  constructor(private http: HttpClient) {}
+In the src/app/app.component.html file, replace everything with the following:
+```html
+<div>
+  <app-navbar></app-navbar>
+  <!-- content -->
+  <router-outlet></router-outlet>
 
-  getPoke(): Observable<any> {
-    return this.http.get(this.url + Math.floor(Math.random() * 152), { headers: { Accept: 'application/json' } });
-  }
+</div>
+```
+
+In the src/app/app.component.ts file, replace everything with the following:
+```ts
+import { Component } from '@angular/core';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { NavbarComponent } from './components/navbar/navbar.component';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [NavbarComponent, RouterOutlet, RouterLink],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css'
+})
+export class AppComponent {
+  title = 'pokeguesserTUT';
+
 }
 ```
 
-This PokeService is a service that we can inject into other components. By specifying `@Injectable({providedIn: 'root'})`, we are stating that a [Singleton](https://refactoring.guru/design-patterns/singleton) of PokeService is created and accessible by the entire application. This is because all injected services need a provider, so we create one instance and provide it to the whole application. This leads us to our next issue, the HttpClient. 
+Delete everything in the src/app/app.component.css file
 
-app.config.ts
 ------
-We use an injected HttpClient service in our PokeService. However, we have not specified a Provider. If we never specify a provider, we will recieve a provider undefined error later on. Let's establish the HttpClient provider now. in `app.config.ts`, add the following import:
-```ts
-import { HttpClientModule } from '@angular/common/http';
-```
-Change the existing @angular/core` import to include importProvidersFrom:
-```ts
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
-```
-Then modify the providers list to include HttpClientModule:
-```ts
-providers: [provideRouter(routes), importProvidersFrom(HttpClientModule)]
-```
 
-app.component.ts
-------
-Inside of the `app.component.ts` file:
-Add the following import (The pokémon API service you just created):
+Create two files, user.interface.ts and auth.service.ts.
+Put the following in user.interface.ts:
 ```ts
-import { PokeService } from './poke.service';
+export interface UserInterface {
+    email: string;
+    username: string;
+}
 ```
-Inside the `export class AppComponent` curly braces add:
-variables poke and sprite:
+Put the following in auth.service.ts:
 ```ts
-poke = "";
-sprite = null;
-```
-and a constructor for the pokémon API service:
-```ts
-constructor(private pokeService: PokeService) {}
-```
-and finally a `fetchPoke` function to grab a Pokémon from the API:
-```ts
-fetchPoke(): void {
-    this.pokeService.getPoke().subscribe((data: any) => {
-      this.poke = data.name;
-      this.sprite = data.sprites.front_default
-    });
-  }
-```
+import { Injectable, inject, signal } from "@angular/core";
+import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, user } from "@angular/fire/auth";
+import { Observable, from } from "rxjs";
+import { UserInterface } from "./user.interface";
 
-Now, edit `app.component.html` by deleting everything currently in the file. Replace it with:
-```html
-<div>
-  <!-- Navbar -->
-  <div>
-    <nav>
-      <div>
-        <a>PokeGuesser</a>
-      </div>
-    </nav>
-  </div>
+@Injectable({
+    providedIn: 'root'
+})
+export class AuthService {
+    firebaseAuth = inject(Auth)
+    user$ = user(this.firebaseAuth)
+    currentUserSig = signal<UserInterface | null | undefined>(undefined)
 
-  <!-- content -->
-  <div>
-    <h4>Guess that Pokemon!</h4>
-    <div>
-      <img width="300px" [src]="sprite">
-    </div>
-    <input type="text" placeholder="pikachu">
-    <div>
-      <div>
-        <button (click)="fetchPoke()">New</button>
-      </div>
-      <div>
-        <button>Check</button>
-      </div>
-    </div>
-  </div>
-</div>
-```
-
-Check out the app with `ng serve`!
-It should now be able to fetch a random Pokémon from the PokéAPI and display its sprite image. Be sure to hit the "new" button a few times to try it out. Next, we will add the guessing and checking functionality.
-
-#### Guess and Check Functionality
-Back in the `app.component.ts` file, initialize three new variables in `export class AppComponent`:
-```ts
-  guessed = false;
-  correct = false;
-  guess = "";
-```
-Add a guess function under your variables in `export class AppComponent`:
-```ts
-  guessPoke(poke: string) {
-    this.guessed = true
-    this.correct = this.guess.toLowerCase() === poke
-  }
-```
-And add an onKey function in `export class AppComponent`:
-```ts
-onKey(event: any) {this.guess = event.target.value;}
-```
-Finally, modify the existing fetchPoke function in `export class AppComponent` to reset those variables each time a new Pokémon is fetched:
-```ts
-fetchPoke(): void {
-    this.guess = ""
-    this.guessed = false
-    this.correct = false
-    this.pokeService.getPoke().subscribe((data: any) => {
-      this.poke = data.name;
-      this.sprite = data.sprites.front_default
-    });
-  }
-```
-
-In the app.component.html, we need to do the following:
-Modify the input tag to include two additional attributes:
-```html
-<input [value]="guess" (keyup)="onKey($event)" type="text" placeholder="pikachu">
-```
-Modify the check button to include a function call:
-```html
-<button (click)="guessPoke(poke)">
-  {{ guessed ? "Checked" : "Check" }}
-</button>
-```
-Add an indicator for correct or incorrect at the end of the last div. Refer to the full html below:
-```html
-<p>{{ guessed ? (correct ? ("Correct - " + poke) : ("Incorrect - " + poke)) : "" }}</p>
-```
-The full app.component.html should now look like this:
-```html
-<div>
-  <!-- Navbar -->
-  <div>
-    <nav>
-      <div>
-        <a>PokeGuesser</a>
-      </div>
-    </nav>
-  </div>
-
-  <!-- content -->
-  <div>
-    <h4>Guess that Pokemon!</h4>
-    <div>
-      <img width="300px" [src]="sprite">
-    </div>
-    <input [value]="guess" (keyup)="onKey($event)" type="text" placeholder="pikachu">
-    <div>
-      <div>
-        <button (click)="fetchPoke()">New</button>
-      </div>
-      <div>
-        <button (click)="guessPoke(poke)">
-          {{ guessed ? "Checked" : "Check" }}
-        </button>
-      </div>
-    </div>
-  </div>
-<p>{{ guessed ? (correct ? ("Correct - " + poke) : ("Incorrect - " + poke)) : "" }}</p>
-</div>
-```
-
-#### Tidying Up - Back End
-app.component.ts
-------
-Modify the existing import from @angular/core to include three more imports:
-```ts
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-```
-Modify the `export class AppComponent` to implement `OnInit`:
-```ts
-export class AppComponent implements OnInit {
-```
-Add the `ngOnInit` function inside of the `export class AppComponent` function to ensure a Pokémon is fetched the first time the page is loaded:
-```ts
-  ngOnInit(): void {
-    this.fetchPoke()
-  }
-```
-Add the `ngAfterViewInit` function inside of the `export class AppComponent` function to ensure the input field is automatically focused.
-```ts
-  @ViewChild("pokeGuess") pokeGuessField!: ElementRef;
-  ngAfterViewInit() {
-    this.pokeGuessField.nativeElement.focus();
-  }
-```
-Add the following line to the `fetchPoke` function to ensure the input field is automatically focused after hitting the _New_ button:
-```ts
-this.pokeGuessField.nativeElement.focus();
-```
-Add the following function inside of the `export class AppComponent` function to ensure that when the `enter` key is pressed, either the guess is checked or a new Pokémon is fetched.
-```ts
-  decideEnter(poke: string): void {
-    if (this.guessed) {
-      this.fetchPoke()
+    register(email: string, username: string, password: string): Observable<void> {
+        const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, password,).then(response => updateProfile(response.user, {displayName: username}))
+        return from(promise)
     }
-    else {
-      this.guessPoke(poke)
+
+    login(email: string, password: string): Observable<void> {
+        const promise = signInWithEmailAndPassword(this.firebaseAuth, email, password,).then(() => {});
+        return from(promise)
     }
-  }
+
+    logout(): Observable<void> {
+        const promise = signOut(this.firebaseAuth)
+        return from(promise)
+    }
+}
 ```
 
-#### Tidy Up - Front End
-In your project, create a new **folder** in src/assets called font. Then, download this arcade font [joystix](https://www.dafont.com/joystix.font). Open the downloads folder in file explorer and find `joystix.zip`. Extract the files from the zip. Open the newly created joystix folder. Rename `joystix monospace.otf` to `joystix.otf` Drag the `joystix.otf` file into the src/assets/font/ folder.
+------
 
-In the global css file `src/styles.css`, add the following:
+In the navbar component, replace the .css, .html, and .ts files with the following code respectively:
+.css:
 ```css
-html {
-    background-color: #e3e3e3;
-}
-@font-face {
+.content {
+    border-bottom: 1px solid #000000;
+    width: 100%;
     font-family: 'joystix';
-    src: url(assets/font/joystix.otf) format("opentype");
+    font-size: 2.5rem;
+}
+.navbar {
+    padding: 15px 15px;
+    display: flex;
+    justify-content: space-between;
+}
+.start {
+    display: flex;
+    align-items: center;
+}
+.start a {
+    font-size: larger;
+    font-weight: bold;
+    text-decoration: none;
+    color: #000000;
+    text-decoration: none;
+}
+
+.end {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    font-size: 1.5rem;
+}
+.end a {
+    color: #000000;
+    text-decoration: none;
+}
+```
+.html:
+```html
+<div class="content">
+    <nav class="navbar">
+        <div class="start">
+            <a routerLink="/">PokeGuesser</a>
+        </div>
+        @if (authService.currentUserSig() == null) {
+        <div class="end">
+            <a routerLink="/register">Register</a>|
+            <a routerLink="/login">Login</a>
+        </div>
+        }
+        @else {
+        <div class="end">
+            {{authService.currentUserSig()?.username}}-
+            <a (click)="logout()">Logout</a>
+        </div>
+        }
+    </nav>
+</div>
+```
+.ts:
+```ts
+import { Component, inject } from '@angular/core';
+import { AuthService } from '../../auth.service';
+import { RouterLink, RouterOutlet } from '@angular/router';
+
+@Component({
+  selector: 'app-navbar',
+  standalone: true,
+  imports: [RouterLink, RouterOutlet],
+  templateUrl: './navbar.component.html',
+  styleUrl: './navbar.component.css'
+})
+export class NavbarComponent {
+  authService = inject(AuthService);
+  logout(): void {
+    this.authService.logout();
+  }
 }
 ```
 
-app.component.html
 ------
-In src/app/app.component.html, once again modify the input line to add a few more attributes:
+
+In the login component, replace the .css, .html, and .ts files with the following code respectively:
+.css:
+```css
+.content {
+    width: 100%;
+    font-family: 'joystix';
+    font-size: 1rem;
+}
+input[type="text"] {
+    font-family: 'joystix';
+    font-size: 0.75rem;
+}
+.error {
+    color: red;
+}
+button {
+    font-family: 'joystix';
+}
+```
+.html:
 ```html
-<input [value]="guess" #pokeGuess pokeGuessField type="text" class="guess-input" (keyup.enter)="decideEnter(poke)" (keyup)="onKey($event)" placeholder="pikachu" autofocus cdkTrapFocus>
+<div class="content">
+  <h1>Login</h1>
+
+  @if (errorMessage) {
+    <div class="error">{{ errorMessage }}</div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div>
+      <input type="text" placeholder="Email" formControlName="email" />
+    </div>
+    <div>
+      <input type="password" placeholder="Password" formControlName="password" />
+    </div>
+    <div>
+      <button type="submit">Sign In</button>
+    </div>
+  </form>
+</div>
+```
+.ts:
+```ts
+import { HttpClient } from '@angular/common/http';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../../auth.service';
+
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.css',
+  standalone: true,
+  imports: [ReactiveFormsModule],
+})
+export class LoginComponent {
+  fb = inject(FormBuilder);
+  http = inject(HttpClient);
+  authService = inject(AuthService)
+  router = inject(Router);
+
+  form = this.fb.nonNullable.group({
+    email: ['', Validators.required],
+    password: ['', Validators.required],
+  });
+  errorMessage: string | null = null;
+
+  onSubmit(): void {
+    const rawForm = this.form.getRawValue();
+    this.authService.login(rawForm.email, rawForm.password).subscribe({next: () => {
+      this.router.navigateByUrl('/')
+    }, error: (err) => {
+      this.errorMessage = err.code
+    }})
+  }
+}
 ```
 
-app.component.css
 ------
-In src/app/app.component.css, add the following css classes:
+
+In the register component, replace the .css, .html, and .ts files with the following code respectively:
+.css:
+```css
+.content {
+    width: 100%;
+    font-family: 'joystix';
+    font-size: 1rem;
+}
+input[type="text"] {
+    font-family: 'joystix';
+    font-size: 0.75rem;
+}
+.error {
+    color: red;
+}
+button {
+    font-family: 'joystix';
+}
+```
+.html:
+```html
+<div class="content">
+  <h1>Register</h1>
+
+  @if (errorMessage) {
+    <div>{{ errorMessage }}</div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div>
+      <input type="text" placeholder="Username" formControlName="username" />
+    </div>
+    <div>
+      <input type="text" placeholder="Email" formControlName="email" />
+    </div>
+    <div>
+      <input type="password" placeholder="Password" formControlName="password" />
+    </div>
+    <div>
+      <button type="submit">Sign Up</button>
+    </div>
+  </form>
+</div>
+```
+.ts:
+```ts
+import { HttpClient } from '@angular/common/http';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../../auth.service';
+
+@Component({
+  selector: 'app-register',
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.css',
+  standalone: true,
+  imports: [ReactiveFormsModule],
+})
+export class RegisterComponent {
+  fb = inject(FormBuilder);
+  http = inject(HttpClient);
+  authService = inject(AuthService)
+  router = inject(Router);
+
+  form = this.fb.nonNullable.group({
+    username: ['', Validators.required],
+    email: ['', Validators.required],
+    password: ['', Validators.required],
+  });
+  errorMessage: string | null = null;
+
+  onSubmit(): void {
+    const rawForm = this.form.getRawValue();
+    this.authService.register(rawForm.email, rawForm.username, rawForm.password).subscribe({next: () => {
+      this.router.navigateByUrl('/')
+    }, error: (err) => {
+      this.errorMessage = err.code
+    }})
+  }
+}
+```
+
+------
+
+In the pages/create-account component, replace the .html, and .ts files with the following code respectively:
+.html:
+```html
+<app-register></app-register>
+```
+.ts:
+```ts
+import { Component } from '@angular/core';
+import { RegisterComponent } from '../../components/register/register.component';
+
+@Component({
+  selector: 'app-create-account',
+  standalone: true,
+  imports: [RegisterComponent],
+  templateUrl: './create-account.component.html',
+  styleUrl: './create-account.component.css'
+})
+export class CreateAccountComponent {
+
+}
+```
+
+------
+
+In the pages/signin component, replace the .html, and .ts files with the following code respectively:
+.html:
+```html
+<app-login></app-login>
+```
+.ts:
+```ts
+import { Component } from '@angular/core';
+import { LoginComponent } from '../../components/login/login.component';
+
+@Component({
+  selector: 'app-signin',
+  standalone: true,
+  imports: [LoginComponent],
+  templateUrl: './signin.component.html',
+  styleUrl: './signin.component.css'
+})
+export class SigninComponent {
+
+}
+```
+
+------
+
+In the pages/home component, replace the .css, .html, and .ts files with the following code respectively:
+.css:
 ```css
 .container {
     display: flex;
@@ -305,7 +462,19 @@ In src/app/app.component.css, add the following css classes:
     font-family: 'joystix';
 }
 nav {
+    display: flex;
+    width: 100%;
     font-size: 3.5rem;
+    justify-content: flex-start;
+}
+.navbar {
+    width: 100%;
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+}
+.links {
+    padding-left: 40px;
 }
 .content {
     display: flex;
@@ -324,72 +493,121 @@ button {
     border-radius: 5px;
     cursor: pointer;
     font-size: 2.2rem;
-	  margin: 1rem;
+    margin: 1rem;
     font-family: 'joystix';
 }
 button:hover {
     opacity: 90%;
 }
-input[type="text"]
-{
+input[type="text"] {
     font-family: 'joystix';
     font-size: 1.5rem;
 }
 ```
 
-app.component.html
-------
-In src/app/app.component.html, replace the existing code with the following in order to add the css class selectors:
+.html:
 ```html
 <div class="container">
-  <!-- Navbar -->
-  <div>
-    <nav>
+    <!-- content -->
+    <div class="content">
+      <h4>Guess that Pokemon!</h4>
       <div>
-        <a>PokeGuesser</a>
+        <img width="300px" [src]="sprite">
       </div>
-    </nav>
-  </div>
-
-  <!-- content -->
-  <div class="content">
-    <h4>Guess that Pokemon!</h4>
-    <div>
-      <img width="300px" [src]="sprite">
-    </div>
-    <div>
-      <input [value]="guess" #pokeGuess pokeGuessField type="text" class="guess-input" (keyup.enter)="decideEnter(poke)" (keyup)="onKey($event)" placeholder="pikachu" autofocus cdkTrapFocus>
-      <div class="button-group">
-        <div>
-          <button (click)="fetchPoke()">New</button>
-        </div>
-        <div>
-          <button (click)="guessPoke(poke)">
-            {{ guessed ? "Checked" : "Check" }}
-          </button>
+      <div>
+        <input [value]="guess" #pokeGuess pokeGuessField type="text" class="guess-input" (keyup.enter)="decideEnter(poke)" (keyup)="onKey($event)" placeholder="pikachu" autofocus cdkTrapFocus>
+        <div class="button-group">
+          <div>
+            <button (click)="fetchPoke()">New</button>
+          </div>
+          <div>
+            <button (click)="guessPoke(poke)">
+              {{ guessed ? "Checked" : "Check" }}
+            </button>
+          </div>
         </div>
       </div>
+      <p>{{ guessed ? (correct ? ("Correct - " + poke) : ("Incorrect - " + poke)) : "" }}</p>
     </div>
-    <p>{{ guessed ? (correct ? ("Correct - " + poke) : ("Incorrect - " + poke)) : "" }}</p>
   </div>
-</div>
 ```
 
-Push to Github!
+.ts:
+```ts
+import { Component, OnInit, ViewChild, ElementRef, inject } from '@angular/core';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { PokeService } from './poke.service';
+import { AuthService } from '../../auth.service';
+
+@Component({
+  selector: 'app-home',
+  standalone: true,
+  imports: [RouterOutlet, RouterLink],
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.css'
+})
+export class HomeComponent implements OnInit {
+  title = 'pokeguesserTUT';
+  poke = "";
+  sprite = null;
+  guessed = false;
+  correct = false;
+  guess = "";
+
+  authService = inject(AuthService);
+
+  @ViewChild("pokeGuess") pokeGuessField!: ElementRef;
+  ngAfterViewInit() {
+    this.pokeGuessField.nativeElement.focus();
+  }
+
+  constructor(private pokeService: PokeService) {}
+  fetchPoke(): void {
+    this.guess = ""
+    this.guessed = false
+    this.correct = false
+    this.pokeService.getPoke().subscribe((data: any) => {
+      this.poke = data.name;
+      this.sprite = data.sprites.front_default
+    });
+    this.pokeGuessField.nativeElement.focus();
+  }
+
+  onKey(event: any) {this.guess = event.target.value;}
+
+  guessPoke(poke: string) {
+    this.guessed = true
+    this.correct = this.guess.toLowerCase() === poke
+  }
+
+  decideEnter(poke: string): void {
+    if (this.guessed) {
+      this.fetchPoke()
+    }
+    else {
+      this.guessPoke(poke)
+    }
+  }
+
+  ngOnInit(): void {
+    this.authService.user$.subscribe((user) => {if (user) {
+        this.authService.currentUserSig.set({
+          email: user.email!,
+          username: user.displayName!,
+        });
+      } else {
+        this.authService.currentUserSig.set(null);
+      }
+    });
+    this.fetchPoke();
+  }
+
+  logout(): void {
+    this.authService.logout();
+  }
+}
+```
+
 ------
-In the vscode terminal, type:
-> git status
 
-Verify your changes are present in the status report. Then, stage your changes:
-> git add .
-
-Commit your staged changes:
-> git commit -m "completed pokemon guessing game"
-
-Add the remote repo:
-> git remote add origin [REPLACE WITH REPO URL]
-
-Then, push to the remote repo:
-> git push --set-upstream origin master
-
-That is it! Congratulations on your new Pokémon Guessing Game!
+Move the poke.service.ts file into the pages/home directory.
