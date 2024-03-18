@@ -57,12 +57,16 @@ I hid my information simply so that you would not attempt to copy it. However, d
 To allow for account creation and signing in, we will need more pages. to begin, we will separate our application into pages and route to these pages.
 Before that, create a folder in the app directory called "components". Then, run the following commands:
 > ng g c components/login
+
 > ng g c components/register
+
 > ng g c components/navbar
 
 Create a folder in the app directory called "pages". Then, run the following commands:
 > ng g c pages/home
+
 > ng g c pages/create-account
+
 > ng g c pages/signin
 
 in the `src/app/routes.ts` file, replace everything with the following:
