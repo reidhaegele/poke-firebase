@@ -38,7 +38,7 @@ Select [CREATE NEW PROJECT]
 
 > Please specify a unique project id (cannot be modified afterward) [6-30 characters]:
 
-Type in "GDSC-[your name and last initial]-pokeguesser". Be sure to replace your name with your actual name and initial. This is because your project ID must be uniqe from all Firebase projects which can be challenging.
+Type in "GDSC-[your name and last initial]-pokeguesser". Be sure to replace your name with your actual name and initial. This is because your project ID must be unique from all Firebase projects which can be challenging.
 
 > What would you like to call your project? (gdsc-[[your name and last initial]]-pokeguesser)
 
